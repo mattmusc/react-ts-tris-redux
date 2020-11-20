@@ -61,10 +61,9 @@ export const availableTilesIndices = (board: TileState[]): number[] => {
     .filter(i => i);
 };
 
-export const minimax = (gameBoard: TileState[]): TileState[] => {
+// Finds the index of the best possible move for the player
+//
+export const minimax = (gameBoard: TileState[], player: PlayerMarker): TileState[] => {
   const availableTiles = availableTilesIndices(gameBoard);
-
-
-
   return gameBoard;
 };

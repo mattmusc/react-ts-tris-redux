@@ -29,16 +29,17 @@ const appIinitialState: AppState = {
 const appReducer = (state: AppState = appIinitialState, action: BoardActionsT) => {
   switch (action.type) {
     case BoardActions.SetCell:
-      let updatedBoard = updateBoard(state.board, action.payload.index, state.player);
-
-      const winner = getWinner(updatedBoard);
-      const draw = isFilled(updatedBoard) && winner === null;
       const player = getNextPlayer(state.player);
+      
+      let updatedBoard = updateBoard(state.board, action.payload.index, state.player);
 
       // ai turn
       if (player === TileState.O) {
-        updatedBoard = minimax(updatedBoard);
+        updatedBoard = minimax(updatedBoard, player);
       }
+
+      const winner = getWinner(updatedBoard);
+      const draw = isFilled(updatedBoard) && winner === null;
 
       return {
         ...state,
