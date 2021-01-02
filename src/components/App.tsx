@@ -63,7 +63,7 @@ const App: React.FC = () => {
 
       <MessagesContainer>
         {state.finished && 'Game finished!'}
-        {state.winner && ` Congratulations to ${state.winner.player}!`}
+        {state.winner && ` Congratulations to ${TileMarkers[state.winner.player]}!`}
         {state.finished && state.winner === null && ` It's a draw!`}
       </MessagesContainer>
 
