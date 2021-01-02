@@ -56,8 +56,25 @@ const TileMarkers: { [key in Tile]: string } = {
   ' ': ' ',
 };
 
+const playWinnerSound = () => {
+  const audio = new Audio('/audio/cheering.mp3');
+  audio.play();
+};
+
+const playLoserSound = () => {
+  const audio = new Audio('/audio/sad_trombone.mp3');
+  audio.play();
+};
+
 const App: React.FC = () => {
   const [state, dispatch] = useReducer(appReducer, initialState);
+
+  if (state.finished && state.winner?.player === 'X') {
+    playWinnerSound();
+  } else if (state.finished && state.winner?.player === 'O') {
+    playLoserSound();
+  }
+
   return (
     <AppWrapper>
 

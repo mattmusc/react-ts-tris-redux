@@ -42,7 +42,7 @@ const boardFilled = (board: Tile[][]): boolean =>
 const updateBoard = (board: Tile[][], payload: UpdateGamePayload): Tile[][] =>
   board.map((tiles, row) =>
     tiles.map((tile, col) => {
-      if (row === payload.r && col === payload.c) {
+      if (row === payload.r && col === payload.c && tile === ' ') {
         return payload.p;
       }
       return tile;
