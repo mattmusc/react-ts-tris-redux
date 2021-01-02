@@ -66,6 +66,11 @@ const playLoserSound = () => {
   audio.play();
 };
 
+const playDrawSound = () => {
+  const audio = new Audio('/audio/ding.mp3');
+  audio.play();
+};
+
 const App: React.FC = () => {
   const [state, dispatch] = useReducer(appReducer, initialState);
 
@@ -73,8 +78,10 @@ const App: React.FC = () => {
     if (state.finished) {
       if (state.winner?.player === 'X') {
         playWinnerSound();
-      } else {
+      } else if (state.winner?.player === 'O') {
         playLoserSound();
+      } else if (state.winner?.player === null) {
+        playDrawSound();
       }
     }
   }, [state.finished, state.winner]);
