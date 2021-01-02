@@ -1,4 +1,4 @@
-import React, {useReducer} from 'react';
+import React, {useEffect, useReducer} from 'react';
 import styled from 'styled-components';
 
 import {Tile} from './common';
@@ -69,11 +69,15 @@ const playLoserSound = () => {
 const App: React.FC = () => {
   const [state, dispatch] = useReducer(appReducer, initialState);
 
-  if (state.finished && state.winner?.player === 'X') {
-    playWinnerSound();
-  } else if (state.finished && state.winner?.player === 'O') {
-    playLoserSound();
-  }
+  useEffect(() => {
+    if (state.finished) {
+      if (state.winner?.player === 'X') {
+        playWinnerSound();
+      } else {
+        playLoserSound();
+      }
+    }
+  }, [state.finished, state.winner]);
 
   return (
     <AppWrapper>
