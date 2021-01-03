@@ -1,8 +1,8 @@
-import React, {useEffect, useReducer} from 'react';
+import React, {useEffect, useReducer, useRef} from 'react';
 import styled from 'styled-components';
 
 import {Tile} from './common';
-import {appReducer, initialState, resetGame, updateGame} from './store';
+import {appReducer, initialState, resetGame, setSoundEnabled, updateGame} from './store';
 
 const AppWrapper = styled.div`
   display: flex;
@@ -46,7 +46,6 @@ const TileContainer = styled.div<TileContainerProps>`
 `;
 
 const MessagesContainer = styled.div`
-  margin-top: 3vh;
   min-height: 5vh;
 `;
 
@@ -56,38 +55,46 @@ const TileMarkers: { [key in Tile]: string } = {
   ' ': ' ',
 };
 
-const playWinnerSound = () => {
-  const audio = new Audio('/audio/cheering.mp3');
-  audio.play();
-};
-
-const playLoserSound = () => {
-  const audio = new Audio('/audio/sad_trombone.mp3');
-  audio.play();
-};
-
-const playDrawSound = () => {
-  const audio = new Audio('/audio/ding.mp3');
-  audio.play();
-};
-
 const App: React.FC = () => {
   const [state, dispatch] = useReducer(appReducer, initialState);
 
+  const audioRefs = useRef({
+    winner: new Audio('/audio/cheering.mp3'),
+    loser: new Audio('/audio/sad_trombone.mp3'),
+    draw: new Audio('/audio/ding.mp3'),
+  })
+
   useEffect(() => {
+    const audioKey = state.winner?.soundKey ?? 'draw';
+    const audioToPlay = audioRefs.current[audioKey];
+
+    const stopAll = () =>
+      Object.values(audioRefs.current).forEach((audio: HTMLAudioElement) => {
+        audio.pause();
+        audio.currentTime = 0;
+      });
+
     if (state.finished) {
-      if (state.winner?.player === 'X') {
-        playWinnerSound();
-      } else if (state.winner?.player === 'O') {
-        playLoserSound();
-      } else if (state.winner?.player === null) {
-        playDrawSound();
+      if (state.soundEnabled) {
+        console.log('playing', audioKey);
+        audioToPlay.play();
+      } else {
+        console.log('stopping all');
+        stopAll();
       }
+    } else {
+      console.log('stopping all');
+      stopAll();
     }
-  }, [state.finished, state.winner]);
+
+  }, [state.finished, state.soundEnabled, state.winner]);
 
   return (
     <AppWrapper>
+
+      <div>
+        <h1>Tic Tac Toe</h1>
+      </div>
 
       <MessagesContainer>
         {state.finished && 'Game finished!'}
@@ -113,12 +120,21 @@ const App: React.FC = () => {
         }
       </Board>
 
-      <button
-        type="button"
-        onClick={() => dispatch(resetGame())}
-      >
-        Reset
-      </button>
+      <div>
+        <button
+          type="button"
+          onClick={() => dispatch(resetGame())}
+        >
+          Reset
+        </button>
+
+        <button
+          type="button"
+          onClick={() => dispatch(setSoundEnabled(!state.soundEnabled))}
+        >
+          Sound {state.soundEnabled ? 'off' : 'on'}
+        </button>
+      </div>
 
     </AppWrapper>
   );

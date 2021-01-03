@@ -23,6 +23,7 @@ const isWinningCombination = (board: Tile[][], combination: number[], player: Pl
     return {
       player,
       winningTiles: combination,
+      soundKey: player === 'X' ? 'winner' : 'loser',
     };
   }
   return null;

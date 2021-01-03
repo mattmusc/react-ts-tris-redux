@@ -4,6 +4,7 @@ export type PlayerMarker = 'X' | 'O';
 export type Winner = {
   player: PlayerMarker,
   winningTiles: number[],
+  soundKey: 'winner' | 'loser' | 'draw',
 };
 
 export type UpdateGamePayload = {
